@@ -1,11 +1,15 @@
-import { createRootRoute, Navigate, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Avatar, Button, Navbar } from "flowbite-react";
 
 import DiscordIcon from "../components/icons/Discord";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
-import { queryClient } from "../main";
 
 export const Route = createRootRoute<{ queryClient: QueryClient }>({
   component: App,
@@ -13,9 +17,12 @@ export const Route = createRootRoute<{ queryClient: QueryClient }>({
 });
 
 function App() {
-  const { isPending, error, data, isFetching } = useQuery({
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { data, isSuccess } = useQuery({
     queryKey: ["userData"],
-    refetchOnMount: true,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: 1,
     queryFn: async (): Promise<User> => {
@@ -27,35 +34,38 @@ function App() {
     },
   });
 
-  const { refetch } = useQuery({
-    queryKey: ["logout"],
-    queryFn: async () => {
+  if (isSuccess) {
+    navigate({ to: "/home" });
+  }
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
       const url = import.meta.env.VITE_BACKEND_URL + "/users/logout";
       const response = await axios.get(url, {
         withCredentials: true,
       });
       return response.data;
     },
-    enabled: false,
-    retry: 0,
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["userData"] });
+      navigate({ to: "/" });
+    },
   });
 
-  function handleLogOutClick() {
-    refetch();
-    queryClient.removeQueries({ queryKey: ["userData"] });
-  }
-
   return (
-    <div>
+    <div className=" h-20">
       <Navbar fluid rounded>
-        <Navbar.Brand
-          as={Button}
-          href="https://discord.com/oauth2/authorize?client_id=1234546843237748746&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&scope=identify"
-        >
-          <span>Login</span>
-          <DiscordIcon></DiscordIcon>
-        </Navbar.Brand>
-        <Navbar.Brand as={Button} onClick={handleLogOutClick}>
+        {!data?.username && (
+          <Navbar.Brand
+            as={Button}
+            href="https://discord.com/oauth2/authorize?client_id=1234546843237748746&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&scope=identify"
+          >
+            <span>Login</span>
+            <DiscordIcon></DiscordIcon>
+          </Navbar.Brand>
+        )}
+
+        <Navbar.Brand as={Button} onClick={() => mutate()}>
           <span>Log out</span>
         </Navbar.Brand>
         <Navbar.Brand>
@@ -64,7 +74,6 @@ function App() {
       </Navbar>
       <hr />
       <Outlet></Outlet>
-      <div className=" w-full border-t-gray-300">Outlet Bound</div>
       <TanStackRouterDevtools />
     </div>
   );
