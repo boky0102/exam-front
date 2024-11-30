@@ -1,6 +1,5 @@
 import { createRootRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { Avatar, Button, Navbar } from "flowbite-react";
 
 import DiscordIcon from "../components/icons/Discord";
 import {
@@ -10,6 +9,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
+import MainSidebar from "@/components/main-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export const Route = createRootRoute<{ queryClient: QueryClient }>({
   component: App,
@@ -53,29 +57,44 @@ function App() {
   });
 
   return (
-    <div className=" h-20">
-      <Navbar fluid rounded>
-        {!data?.username && (
-          <Navbar.Brand
-            as={Button}
-            href="https://discord.com/oauth2/authorize?client_id=1234546843237748746&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&scope=identify"
-          >
-            <span>Login</span>
-            <DiscordIcon></DiscordIcon>
-          </Navbar.Brand>
-        )}
+    <SidebarProvider>
+      {data && <MainSidebar></MainSidebar>}
 
-        <Navbar.Brand as={Button} onClick={() => mutate()}>
-          <span>Log out</span>
-        </Navbar.Brand>
-        <Navbar.Brand>
-          <Avatar img={data?.avatar}></Avatar>
-        </Navbar.Brand>
-      </Navbar>
-      <hr />
-      <Outlet></Outlet>
+      <main className="w-full">
+        <nav className="flex flex-row items-center justify-between px-7 sm:h-16 md:h-20 ">
+          <h4 className="scroll-m-20 text-xl font-extrabold tracking-tight">
+            Exam
+          </h4>
+          <div className="flex items-center justify-center gap-2">
+            {!data && (
+              <a href="https://discord.com/oauth2/authorize?client_id=1234546843237748746&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&scope=identify">
+                <Button>
+                  LOG IN <DiscordIcon></DiscordIcon>
+                </Button>
+              </a>
+            )}
+            <ModeToggle></ModeToggle>
+            {data && (
+              <Button variant={"default"} onClick={() => mutate()}>
+                LOG OUT
+              </Button>
+            )}
+            <Button>BLA</Button>
+            <Avatar>
+              <AvatarImage
+                className="h-10 w-10 rounded-full"
+                src={data?.avatar}
+              ></AvatarImage>
+              <AvatarFallback></AvatarFallback>
+            </Avatar>
+          </div>
+        </nav>
+        <hr />
+        <Outlet></Outlet>
+      </main>
+
       <TanStackRouterDevtools />
-    </div>
+    </SidebarProvider>
   );
 }
 
