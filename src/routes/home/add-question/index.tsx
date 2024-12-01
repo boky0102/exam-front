@@ -74,6 +74,7 @@ function RouteComponent() {
     console.log(data);
   }, [data]);
 
+  // add time limit on how fast it can fetch depending on keyboar speed
   return (
     <Card className="mx-auto mt-5 w-4/6">
       <CardHeader>
@@ -86,10 +87,10 @@ function RouteComponent() {
       <Separator />
       <CardContent>
         <Command className=" mt-5">
-          <div className="flex items-center">
+          <div className="flex items-center justify-between">
             <CommandInput
               placeholder="Type the name of the subject"
-              className=" grow border-0 border-b border-input bg-transparent p-3 focus-visible:border-primary focus-visible:outline-none"
+              className="max-w-xl grow border-0 border-b border-input bg-transparent p-3 focus-visible:border-primary focus-visible:outline-none"
               onValueChange={handleSubjectChange}
               autoFocus
             ></CommandInput>

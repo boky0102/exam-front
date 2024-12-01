@@ -20,9 +20,9 @@ Here you can find all of dependencies used to build this project.
 
 - [Tailwind](https://tailwindcss.com/)
 
-### Component library
+### Component library / styling
 
-- [Flowbite-React](https://flowbite-react.com/)
+- [Shadcn/ui](https://ui.shadcn.com/)
 
 ### Routing
 
