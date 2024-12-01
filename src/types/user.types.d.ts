@@ -5,4 +5,5 @@ type User = {
 
 type Subject = {
   name: string;
+  sid: number;
 };
