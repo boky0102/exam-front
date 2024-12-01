@@ -58,7 +58,7 @@ function App() {
 
   return (
     <SidebarProvider>
-      {data && <MainSidebar></MainSidebar>}
+      {data && <MainSidebar name={"@" + data.username} />}
 
       <main className="w-full">
         <nav className="flex flex-row items-center justify-between px-7 sm:h-16 md:h-20 ">
@@ -79,7 +79,6 @@ function App() {
                 LOG OUT
               </Button>
             )}
-            <Button>BLA</Button>
             <Avatar>
               <AvatarImage
                 className="h-10 w-10 rounded-full"
@@ -90,7 +89,9 @@ function App() {
           </div>
         </nav>
         <hr />
-        <Outlet></Outlet>
+        <div className=" h-[calc(100vh-5.05rem)] grid-cols-10 overflow-y-auto">
+          <Outlet></Outlet>
+        </div>
       </main>
 
       <TanStackRouterDevtools />

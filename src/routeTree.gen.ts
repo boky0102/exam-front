@@ -13,6 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as HomeIndexImport } from './routes/home/index'
+import { Route as HomeSolveIndexImport } from './routes/home/solve/index'
+import { Route as HomeMyexamsIndexImport } from './routes/home/myexams/index'
+import { Route as HomeAddQuestionIndexImport } from './routes/home/add-question/index'
 
 // Create/Update Routes
 
@@ -25,6 +28,24 @@ const IndexRoute = IndexImport.update({
 const HomeIndexRoute = HomeIndexImport.update({
   id: '/home/',
   path: '/home/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomeSolveIndexRoute = HomeSolveIndexImport.update({
+  id: '/home/solve/',
+  path: '/home/solve/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomeMyexamsIndexRoute = HomeMyexamsIndexImport.update({
+  id: '/home/myexams/',
+  path: '/home/myexams/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomeAddQuestionIndexRoute = HomeAddQuestionIndexImport.update({
+  id: '/home/add-question/',
+  path: '/home/add-question/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,6 +67,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeIndexImport
       parentRoute: typeof rootRoute
     }
+    '/home/add-question/': {
+      id: '/home/add-question/'
+      path: '/home/add-question'
+      fullPath: '/home/add-question'
+      preLoaderRoute: typeof HomeAddQuestionIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/home/myexams/': {
+      id: '/home/myexams/'
+      path: '/home/myexams'
+      fullPath: '/home/myexams'
+      preLoaderRoute: typeof HomeMyexamsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/home/solve/': {
+      id: '/home/solve/'
+      path: '/home/solve'
+      fullPath: '/home/solve'
+      preLoaderRoute: typeof HomeSolveIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +96,62 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/home': typeof HomeIndexRoute
+  '/home/add-question': typeof HomeAddQuestionIndexRoute
+  '/home/myexams': typeof HomeMyexamsIndexRoute
+  '/home/solve': typeof HomeSolveIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/home': typeof HomeIndexRoute
+  '/home/add-question': typeof HomeAddQuestionIndexRoute
+  '/home/myexams': typeof HomeMyexamsIndexRoute
+  '/home/solve': typeof HomeSolveIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/home/': typeof HomeIndexRoute
+  '/home/add-question/': typeof HomeAddQuestionIndexRoute
+  '/home/myexams/': typeof HomeMyexamsIndexRoute
+  '/home/solve/': typeof HomeSolveIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home'
+  fullPaths:
+    | '/'
+    | '/home'
+    | '/home/add-question'
+    | '/home/myexams'
+    | '/home/solve'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home'
-  id: '__root__' | '/' | '/home/'
+  to: '/' | '/home' | '/home/add-question' | '/home/myexams' | '/home/solve'
+  id:
+    | '__root__'
+    | '/'
+    | '/home/'
+    | '/home/add-question/'
+    | '/home/myexams/'
+    | '/home/solve/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HomeIndexRoute: typeof HomeIndexRoute
+  HomeAddQuestionIndexRoute: typeof HomeAddQuestionIndexRoute
+  HomeMyexamsIndexRoute: typeof HomeMyexamsIndexRoute
+  HomeSolveIndexRoute: typeof HomeSolveIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HomeIndexRoute: HomeIndexRoute,
+  HomeAddQuestionIndexRoute: HomeAddQuestionIndexRoute,
+  HomeMyexamsIndexRoute: HomeMyexamsIndexRoute,
+  HomeSolveIndexRoute: HomeSolveIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +165,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/home/"
+        "/home/",
+        "/home/add-question/",
+        "/home/myexams/",
+        "/home/solve/"
       ]
     },
     "/": {
@@ -105,6 +176,15 @@ export const routeTree = rootRoute
     },
     "/home/": {
       "filePath": "home/index.tsx"
+    },
+    "/home/add-question/": {
+      "filePath": "home/add-question/index.tsx"
+    },
+    "/home/myexams/": {
+      "filePath": "home/myexams/index.tsx"
+    },
+    "/home/solve/": {
+      "filePath": "home/solve/index.tsx"
     }
   }
 }
